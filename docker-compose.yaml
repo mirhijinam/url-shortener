@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  url-shortener:
+    container_name: url-shortener
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '9090:9090'
+    environment:
+      - CONFIG_PATH=${CONFIG_PATH}
+      - DB_PATH=${DB_PATH}
+      - HTTP_ADDR=${HTTP_ADDR}
+      - LOG_LEVEL=${LOG_LEVEL}
+    volumes:
+      - ${PWD}/storage:/storage

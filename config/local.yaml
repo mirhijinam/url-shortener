@@ -1,7 +1,7 @@
 env: "local"
-storage_path: "./storage/storage.db"
+storage_path: "/storage/storage.db"
 http_server: 
-  address: "localhost:8082"
+  address: ":9090"
   timeout: 4s
   idle_timeout: 60s # timeout for a bunch of client's requests
  
