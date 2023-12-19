@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	mwLogger "github.com/mirhijinam/url-shortener/internal/http-server/middleware/logger"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/mirhijinam/url-shortener/internal/config"
 	"github.com/mirhijinam/url-shortener/internal/lib/logger/sl"
 	"github.com/mirhijinam/url-shortener/internal/storage/sqlite"
@@ -27,24 +31,17 @@ func main() {
 	log.Info("starting url-shortener", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
 
-	storage, err := sqlite.New(cfg.StoragePath)
+	_, err := sqlite.New(cfg.StoragePath)
 	if err != nil {
 		slog.Error("failed to init storage", sl.Err(err))
 		os.Exit(1)
 	}
 
-	id, err := storage.SaveURL("https://google.com", "google")
-	if err != nil {
-		log.Error("failed to save url", sl.Err(err))
-	}
-	log.Info("saved url", slog.Int64("id", id))
-
-	id, err = storage.SaveURL("https://google.com", "google")
-	if err != nil {
-		log.Error("failed to save url", sl.Err(err))
-	}
-
-	_ = storage
+	router := chi.NewRouter()
+	router.Use(middleware.RequestID)
+	router.Use(mwLogger.New(log))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.URLFormat)
 }
 
 func SetupLogger(env string) *slog.Logger {
