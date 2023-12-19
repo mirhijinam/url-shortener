@@ -20,14 +20,12 @@ type HTTPServer struct {
 	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s"`
 }
 
-// loads values from .env into the system
 func init() {
 	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
+		log.Fatal("No .env file found")
 	}
 }
 
-// prefix Must is used to make the application throw a panic insted of an error
 func MustLoad() *Config {
 	configPath := getEnv("CONFIG_PATH", "")
 	if configPath == "" {
