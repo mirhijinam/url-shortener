@@ -7,10 +7,11 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - '9090:9090'
+      - '${HTTP_PORT}:${HTTP_PORT}'
     environment:
       - CONFIG_PATH=${CONFIG_PATH}
       - DB_PATH=${DB_PATH}
+      - HTTP_PORT=${HTTP_PORT}
       - HTTP_ADDR=${HTTP_ADDR}
       - LOG_LEVEL=${LOG_LEVEL}
     volumes:
